@@ -3,12 +3,15 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
-#include "cards.h"
 using namespace std;
 
-int main() {
+/* arrays holding card values, names and suit */
+const int CARD_VALUES[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
+const string CARD_NAMES[] = {"ACE", "ONE", "TWO", "THREE", "FOUR", 
+                            "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", 
+                            "TEN", "KING", "QUEEN", "JACK"};
+const string CARD_SUIT[] = {"SPADES", "CLUBS", "HEARTS", "DIAMOND"};
 
-    cards(10);
-    cout << "Hello\n";
+int main() {
     return 0;
 }
