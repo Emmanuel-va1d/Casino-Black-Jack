@@ -13,41 +13,41 @@ const string NAMES[] = {"ACE", "TWO", "THREE", "FOUR",
 const string SUIT[] = {"SPADES", "CLUBS", "HEARTS", "DIAMOND"};
 
 /* class to handle cards */
-class Cards {
+class Card {
     public:
         int value;
-        string suit,
-               name;
-        Cards(const int& value, const string& suit, const string& name) {
+        string name;
+        string suit;
+        void cardInfo(const int value, const string name, const string suit) {
             this->value = value;
+            this->name = name;
             this->suit = suit;
-            this->name = suit + " OF " + name;
         }
-        Cards() {}
 };
 
-class Deck : public Cards {
-    private:
-        Cards card[4][13];
+/* class to handle a deck */
+class Deck {
+    private: 
+        Card card[4][13];
     public:
-        void assignCards() {
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 13; j++) {
-                    card[i][j] = Cards(VALUES[j], NAMES[j], SUIT[i]);
-                }
-            }
+        Card getHand() {
+            Card hand;
+            hand = card[rand() % 4][rand() % 13];
+            return hand;
         }
-        Cards randomCard() {
+        Deck() {
             srand(static_cast <int>(time(0)));
-            return card[rand() % 4][rand() % 13];
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 13; j++) 
+                    card[i][j].cardInfo(VALUES[i], NAMES[j], SUIT[i]);
+            }
         }
 };
 
 int main() {
-
-    Deck card;
-    card.assignCards();
-    cout << card.randomCard().name << endl;
+    Deck deck;
+    cout << deck.getHand().name;
+    cout << deck.getHand().name;
 
     return 0;
 }
