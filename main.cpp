@@ -44,17 +44,44 @@ class Deck {
 
 /* class to handle players */
 class Player {
-    Card playersCard;
-    string playerName;
-    int cardCount;
-    double playerBet;
+    public:
+        Card playersCard;
+        string playerName;
+        int cardCount;
+        double playerBet;
 };
 
+/* class to handle the game's ui */
+class Game {
+    private:
+        Player player[2];
+        char choice;
+        bool playing;
+    public:
+        void gameInfo(string name, double money) {
+            player[0].playerName = name;
+            player[0].playerBet = money;
+            player[1].playerName = "Dealer";
+            player[1].playerBet = (rand() % 9 + 1) * 12321;
+            cout << name << ", do you want to join this round (Y/N)? ";
+            cin >> choice;
+            if (choice == 'Y' || choice == 'y') playing = true;
+            else playing = false;
+            system("clear");
+        }
+};
 
 int main() {
-    Deck deck;
-    cout << deck.getHand().name;
-    cout << deck.getHand().name;
+    string name;
+    double money;
+    Game game;
+
+    cout << "What is your name? ";
+    getline(cin, name);
+    cout << "What are your funds? ";
+    cin >> money;
+
+    game.gameInfo(name, money);
 
     return 0;
 }
