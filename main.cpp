@@ -7,9 +7,9 @@ using namespace std;
 
 /* arrays holding card values, names and suit */
 const int VALUES[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
-const string NAMES[] = {"ACE", "TWO", "THREE", "FOUR", 
-                            "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", 
-                            "TEN", "KING", "QUEEN", "JACK"};
+const string NAMES[] = {"ACE", "TWO", "THREE", "FOUR", "FIVE", 
+                        "SIX", "SEVEN", "EIGHT", "NINE", "TEN", 
+                        "KING", "QUEEN", "JACK"};
 const string SUIT[] = {"SPADES", "CLUBS", "HEARTS", "DIAMOND"};
 
 /* class to handle cards */
@@ -18,11 +18,6 @@ class Card {
         int value;
         string name;
         string suit;
-        void cardInfo(const int value, const string name, const string suit) {
-            this->value = value;
-            this->name = name;
-            this->suit = suit;
-        }
 };
 
 /* class to handle a deck */
@@ -38,11 +33,23 @@ class Deck {
         Deck() {
             srand(static_cast <int>(time(0)));
             for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 13; j++) 
-                    card[i][j].cardInfo(VALUES[i], NAMES[j], SUIT[i]);
+                for (int j = 0; j < 13; j++) {
+                    card[i][j].value = VALUES[i];
+                    card[i][j].name = NAMES[j]; 
+                    card[i][j].suit = SUIT[i];
+                }
             }
         }
 };
+
+/* class to handle players */
+class Player {
+    Card playersCard;
+    string playerName;
+    int cardCount;
+    double playerBet;
+};
+
 
 int main() {
     Deck deck;
