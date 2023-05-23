@@ -7,6 +7,7 @@ using namespace std;
 
 /* arrays holding card values, names and suit */
 const int VALUES[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
+const char LETTER[] = {'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'K', 'Q', 'J'};
 const string SYMBOL[] = {"\u2660", "\u2663", "\u2665", "\u2666"};
 const string NAMES[] = {"ACE", "TWO", "THREE", "FOUR", "FIVE", 
                         "SIX", "SEVEN", "EIGHT", "NINE", "TEN", 
@@ -18,9 +19,12 @@ class Card {
     public:
         int value;
         string symbol;
+        char letter;
         string name;
         string suit;
-        string getName() { return name + " OF " + suit; }
+        string getName() { 
+            return name + " OF " + suit; 
+        }
 };
 
 /* class to handle a deck */
@@ -41,6 +45,7 @@ class Deck {
                     card[i][j].name = NAMES[j]; 
                     card[i][j].suit = SUIT[i];
                     card[i][j].symbol = SYMBOL[i];
+                    card[i][j].letter = LETTER[j];
                 }
             }
         }
@@ -79,10 +84,17 @@ class Game {
                 player[0].playersCard[1] = deck.getHand();
                 player[1].playersCard[0] = deck.getHand();
                 player[1].playersCard[1] = deck.getHand();
-                cout << player[0].playersCard[0].symbol << endl;
-                playing = false;
+                cout << "\n\n\t\t" << "DEALER'S HAND\t\t\n";
+                cout << "\t┌─ ─ ─┐\n";
+                cout << "\t|  ┌─ ─ ─┐\n";
+                cout << "\t|  |" << player[1].playersCard[0].letter << "    |\n";
+                cout << "\t|  |  " << player[1].playersCard[0].symbol << "  |\n";
+                cout << "\t└─-|    " << player[1].playersCard[0].letter << "|\n";
+                cout << "\t   └─ ─ ─┘";
+                cin >> choice;
+                break;
             }
-            cout << "Goodbye!";
+            cout << "Goodbye!" << endl;
         }
 };
 
