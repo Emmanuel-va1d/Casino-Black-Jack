@@ -7,6 +7,7 @@ using namespace std;
 
 /* arrays holding card values, names and suit */
 const int VALUES[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
+const string SYMBOL[] = {"\u2660", "\u2663", "\u2665", "\u2666"};
 const string NAMES[] = {"ACE", "TWO", "THREE", "FOUR", "FIVE", 
                         "SIX", "SEVEN", "EIGHT", "NINE", "TEN", 
                         "KING", "QUEEN", "JACK"};
@@ -16,8 +17,10 @@ const string SUIT[] = {"SPADES", "CLUBS", "HEARTS", "DIAMOND"};
 class Card {
     public:
         int value;
+        string symbol;
         string name;
         string suit;
+        string getName() { return name + " OF " + suit; }
 };
 
 /* class to handle a deck */
@@ -34,9 +37,10 @@ class Deck {
             srand(static_cast <int>(time(0)));
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 13; j++) {
-                    card[i][j].value = VALUES[i];
+                    card[i][j].value = VALUES[j];
                     card[i][j].name = NAMES[j]; 
                     card[i][j].suit = SUIT[i];
+                    card[i][j].symbol = SYMBOL[i];
                 }
             }
         }
@@ -45,7 +49,7 @@ class Deck {
 /* class to handle players */
 class Player {
     public:
-        Card playersCard;
+        Card playersCard[10];
         string playerName;
         int cardCount;
         double playerBet;
@@ -69,12 +73,24 @@ class Game {
             else playing = false;
             system("clear");
         }
+        void play(Deck deck) {
+            while (playing) {
+                player[0].playersCard[0] = deck.getHand();
+                player[0].playersCard[1] = deck.getHand();
+                player[1].playersCard[0] = deck.getHand();
+                player[1].playersCard[1] = deck.getHand();
+                cout << player[0].playersCard[0].symbol << endl;
+                playing = false;
+            }
+            cout << "Goodbye!";
+        }
 };
 
 int main() {
     string name;
     double money;
     Game game;
+    Deck deck;
 
     cout << "What is your name? ";
     getline(cin, name);
@@ -82,6 +98,7 @@ int main() {
     cin >> money;
 
     game.gameInfo(name, money);
+    game.play(deck);
 
     return 0;
 }
