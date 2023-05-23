@@ -14,35 +14,40 @@ const string SUIT[] = {"SPADES", "CLUBS", "HEARTS", "DIAMOND"};
 
 /* class to handle cards */
 class Cards {
-    private:
+    public:
         int value;
         string suit,
                name;
-    public:
-        void printDeck() {
-            cout << name << endl;
-        }
         Cards(const int& value, const string& suit, const string& name) {
             this->value = value;
             this->suit = suit;
             this->name = suit + " OF " + name;
         }
-        Cards() {
-            value = 0;
-            suit = "";
-            name = "";
+        Cards() {}
+};
+
+class Deck : public Cards {
+    private:
+        Cards card[4][13];
+    public:
+        void assignCards() {
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 13; j++) {
+                    card[i][j] = Cards(VALUES[j], NAMES[j], SUIT[i]);
+                }
+            }
+        }
+        Cards randomCard() {
+            srand(static_cast <int>(time(0)));
+            return card[rand() % 4][rand() % 13];
         }
 };
 
 int main() {
-    Cards card[4][13];
 
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 13; j++) {
-            card[i][j] = Cards(VALUES[j], NAMES[j], SUIT[i]);
-            card[i][j].printDeck();
-        }
-    }
+    Deck card;
+    card.assignCards();
+    cout << card.randomCard().name << endl;
 
     return 0;
 }
