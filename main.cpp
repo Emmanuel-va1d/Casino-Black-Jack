@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
+#include <vector>
 using namespace std;
 
 /* arrays holding card values, names and suit */
@@ -32,14 +33,25 @@ class Card {
 class Deck {
     private: 
         Card card[4][13];
+        vector<Card> dealtCards;
+        bool repeats = false;
     public:
         Card getHand() {
             Card hand;
-            hand = card[rand() % 4][rand() % 13];
+            do {
+                hand = card[rand() % 4][rand() % 13];
+                for (int i = 0; i < dealtCards.size(); i++) {
+                    if (dealtCards[i].suit == hand.suit && dealtCards[i].name == hand.name)
+                        repeats = true;
+                }
+            } while (repeats);
+            dealtCards.push_back(hand);
+
             return hand;
         }
         Deck() {
             srand(static_cast <int>(time(0)));
+            dealtCards.reserve(52);
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 13; j++) {
                     card[i][j].value = VALUES[j];
