@@ -68,47 +68,58 @@ class Game {
         Deck deck;
         char choice;
         bool playing;
-        bool stand[2] = {false, false};
+        bool stand[2] = {false, true};
         bool active[5][2] = {{true, true}, {true, true}, {false, false}, 
                             {false, false}, {false, false}};
-        int i = 1;
+        int i[2] = {1, 1};
     public:
         void gameInfo(string name, double money) {
             player[0].playerName = name;
             player[0].playerBet = money;
             player[1].playerName = "Dealer";
-            player[1].playerBet = (rand() % 9 + 1) * 123212;
+            player[1].playerBet = (rand() % 9 + 1) * 12321;
             cout << " " << name << ", Play(1) or Quit(2) ";
             cin >> choice;
             if (choice == '1') playing = true;
             else playing = false;
             system("clear");
         }
+        
         void play() {
             player[0].playersCard[0] = deck.getHand();
             player[0].playersCard[1] = deck.getHand();
             player[1].playersCard[0] = deck.getHand();
             player[1].playersCard[1] = deck.getHand();
             while (playing) {
-                active[i][0] = true;
                 dealerHand();
                 playerHand();
                 system("clear");
                 dealerHand();
                 playerHand();
-                cout << " Hit(1) or Stand(2)? ";
-                cin >> choice;
-                if (choice == '1') {
-                    i++;
-                    player[0].playersCard[i] = deck.getHand();
-                    if (count(1, 1) < 17) {
-                        player[1].playersCard[i] = deck.getHand();
-                        active[i][1] = true;
-                    }
+                if (stand[0] == false) {
+                    cout << " Hit(1) or Stand(2)? ";
+                    cin >> choice;
                 }
-                else playing = false;
+                if (choice == '1') {
+                    i[0]++;
+                    i[1]++;
+                    active[i[0]][0] = true;
+                    player[0].playersCard[i[0]] = deck.getHand();
+                }
+                else {
+                    stand[0] = true;
+                    stand[1] = false;
+                }
+                if (count(0, 1) < 17 && stand[1] == false) {
+                    if (choice == '2')
+                        i[1]++;
+                    player[1].playersCard[i[1]] = deck.getHand();
+                    active[i[1]][1] = true;
+                }
+                else 
+                    stand[1] = true;
+                winCondition();
             }
-            cout << "Goodbye!" << endl;
         }
         void dealerHand() {
             cout << "\n\n\t" << player[1].playerName << "'s HAND\t\t\n\n";
@@ -132,7 +143,7 @@ class Game {
         }
 
         void newCard(int r, int j, int p) {
-            for (j; j <= i; j++) {
+            for (j; j <= i[p]; j++) {
                 string row[] = {"┌─ ─ ─┐ ", "|" + player[p].playersCard[j].letter + "    | ",
                                 "|  " + player[p].playersCard[j].symbol + "  | ", 
                                 "|    " + player[p].playersCard[j].letter + "| ", "└─ ─ ─┘ "};
@@ -140,26 +151,48 @@ class Game {
                 if (active[j][p]) 
                     newStr += row[r];
                 cout << newStr;
-                if (j == i)
+                if (j == i[p])
                     cout << endl;
             }
         }
 
         int count(int j, int p) {
             int value = 0;
+            int A = 0;
             bool hasAce = false;
-            for (j; j <= i; j++) {
+            for (j; j <= i[p]; j++) {
                 if (player[p].playersCard[j].value == 11)
-                    hasAce = true;
+                    A++;
                 value += player[p].playersCard[j].value;
             }
-            if (hasAce && value > 21)
-                value -= 10;
+            while (A != 0) {
+                if (value > 21)
+                    value -= 10;
+                A--;
+            }
             return value;
         }
 
         void winCondition() {
-            if (stand[0] == true && stand[1] == true)
+            if (stand[0] == true && stand[1] == true || count(0, 0) > 21 || count(1, 1) > 21) {
+                playing = false;
+                system("clear");
+                if (count(0, 0) > count(0, 1) && count(0, 0) <= 21 || count(0, 1) > 21 && count(0, 1) > 21 )
+                    cout << "\n\t\tYOU WIN! ";
+                else if (count(0, 0) < count(0, 1) && count(0, 1) <= 21 || count(0, 0) > 21 && count(0, 1) <= 21)
+                    cout << "\n\t\tYOU LOSE! ";
+                else
+                    cout << "\n\t\tTIE ";
+                for (int j = 1; j >= 0; j--) {
+                    cout << "\n\n\t" << player[j].playerName << "'s CARDS\t\t\n\n";
+                    cout << " Cards\t\t" << "Count: " << count(0, j) << endl;
+                    cout << " " << player[j].playersCard[0].getName(active[0][j]) << "   \t"; newCard(0, 0, j);
+                    cout << " " << player[j].playersCard[1].getName(active[1][j]) << "   \t"; newCard(1, 0, j);
+                    cout << " " << player[j].playersCard[2].getName(active[2][j]) << "   \t"; newCard(2, 0, j);
+                    cout << " " << player[j].playersCard[3].getName(active[3][j]) << "   \t"; newCard(3, 0, j);
+                    cout << " " << player[j].playersCard[4].getName(active[4][j]) << "   \t"; newCard(4, 0, j);
+                }
+            }
         } 
 };
 
