@@ -189,21 +189,30 @@ class Game {
             if (stand[0] == true && stand[1] == true || count(0, 0) > 21 || count(1, 1) > 21) {
                 playing = false;
                 system("clear");
-                if (count(0, 0) > count(0, 1) && count(0, 0) <= 21 || count(0, 1) > 21 && count(0, 1) > 21 )
+                if (count(0, 0) > count(0, 1) && count(0, 0) <= 21 || count(0, 1) > 21 && count(0, 1) > 21 ) {
+                    player[1].playerBet -= player[0].playerBet * 0.5;
+                    player[0].playerBet *= 1.5;
                     cout << "\n\t\tYOU WIN! ";
-                else if (count(0, 0) < count(0, 1) && count(0, 1) <= 21 || count(0, 0) > 21 && count(0, 1) <= 21)
+                }
+                else if (count(0, 0) < count(0, 1) && count(0, 1) <= 21 || count(0, 0) > 21 && count(0, 1) <= 21) {
+                    player[1].playerBet += player[0].playerBet;
+                    player[0].playerBet = 0;
                     cout << "\n\t\tYOU LOSE! ";
+                }
                 else
                     cout << "\n\t\tTIE ";
                 for (int j = 1; j >= 0; j--) {
                     cout << "\n\n\t" << player[j].playerName << "'s CARDS\t\t\n\n";
-                    cout << " Cards\t\t" << "Count: " << count(0, j) << endl;
+                    cout << " Cards\t\t\tCount: " << count(0, j);
+                    cout << "\t\tBet: $" << player[j].playerBet << endl;
                     cout << " " << player[j].playersCard[0].getName(active[0][j]) << "   \t"; newCard(0, 0, j);
                     cout << " " << player[j].playersCard[1].getName(active[1][j]) << "   \t"; newCard(1, 0, j);
                     cout << " " << player[j].playersCard[2].getName(active[2][j]) << "   \t"; newCard(2, 0, j);
                     cout << " " << player[j].playersCard[3].getName(active[3][j]) << "   \t"; newCard(3, 0, j);
                     cout << " " << player[j].playersCard[4].getName(active[4][j]) << "   \t"; newCard(4, 0, j);
                 }
+                cout << " " << player[0].playerName << ", Play(1) or Quit(2) ";
+                cin >> choice;
             }
         } 
 };
