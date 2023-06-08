@@ -78,8 +78,8 @@ class Game {
     private:
         Player player[2];
         Deck deck;
-        char choice;
-        bool playing;
+        int choice;
+        bool playing = true;
         bool stand[2] = {false, true};
         bool active[5][2] = {{true, true}, {true, true}, {false, false}, 
                             {false, false}, {false, false}};
@@ -90,9 +90,11 @@ class Game {
             player[0].playerBet = money;
             player[1].playerName = "Dealer";
             player[1].playerBet = (rand() % 9 + 1) * 12321;
-            cout << " " << name << ", Play(1) or Quit(2) ";
-            cin >> choice;
-            if (choice == '1') playing = true;
+            do {
+                cout << " " << name << ", Play(1) or Quit(2) ";
+                cin >> choice;
+            } while (choice != 1 && choice != 2);
+            if (choice == 1) playing = true;
             else playing = false;
             system("clear");
         }
@@ -103,16 +105,16 @@ class Game {
             player[1].playersCard[0] = deck.getHand();
             player[1].playersCard[1] = deck.getHand();
             while (playing) {
-                dealerHand();
-                playerHand();
                 system("clear");
                 dealerHand();
                 playerHand();
                 if (stand[0] == false) {
-                    cout << " Hit(1) or Stand(2)? ";
-                    cin >> choice;
+                    do {
+                        cout << " Hit(1) or Stand(2) ";
+                        cin >> choice;
+                    } while (choice != 1 && choice != 2);
                 }
-                if (choice == '1') {
+                if (choice == 1) {
                     i[0]++;
                     i[1]++;
                     active[i[0]][0] = true;
@@ -123,7 +125,7 @@ class Game {
                     stand[1] = false;
                 }
                 if (count(0, 1) < 17 && stand[1] == false) {
-                    if (choice == '2')
+                    if (choice == 2)
                         i[1]++;
                     player[1].playersCard[i[1]] = deck.getHand();
                     active[i[1]][1] = true;
