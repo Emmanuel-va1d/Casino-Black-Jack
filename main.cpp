@@ -224,7 +224,7 @@ class Game {
                     player[0].playerBet *= 1.5;
                     cout << "\n\t\tYOU WIN! ";
                 }
-                else if (count(0, 0) < count(0, 1) && count(0, 1) <= 21 || count(0, 0) > 21 && count(0, 1) <= 21) {
+                else if (count(0, 0) < count(0, 1) && count(0, 1) <= 21 || count(0, 0) > 21 && count(0, 1) <= 21 || count (0, 0) > 21 && count(0, 1) > 21) {
                     player[1].playerBet += player[0].playerBet;
                     player[0].playerBet = 0;
                     cout << "\n\t\tYOU LOSE! ";
