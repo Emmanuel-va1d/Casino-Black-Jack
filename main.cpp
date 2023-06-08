@@ -14,6 +14,7 @@ const string NAMES[] = {"ACE", "TWO", "THREE", "FOUR", "FIVE",
                         "SIX", "SEVEN", "EIGHT", "NINE", "TEN", 
                         "KING", "QUEEN", "JACK"};
 const string SUIT[] = {"SPADES", "CLUBS", "HEARTS", "DIAMOND"};
+const double ADV[] = {9.8, 13.4, 18.0, 23.2, 23.9, 14.3, 5.4, -4.3, -16.9, -16.9, -16.9, -16.9, -16.0};
 
 /* class to handle cards */
 class Card {
@@ -48,6 +49,29 @@ class Deck {
             dealtCards.push_back(hand);
 
             return hand;
+        }
+        double probability(int count) {
+            int remainingCards = 52 - dealtCards.size();
+            int favorableOutcomes = 0;
+            for (int suit = 0; suit < 4; suit++) {
+                for (int rank = 0; rank < 13; rank++) {
+                    Card simulatedCard = card[suit][rank];
+                    if (!isCardDealt(simulatedCard)) {
+                        int simulatedCount = count + simulatedCard.value;
+                        if (simulatedCount == 21)
+                            favorableOutcomes++;
+                    }
+                }
+            }
+            double probability = static_cast<double>(favorableOutcomes) / remainingCards * 100;
+            return probability;
+        }
+        bool isCardDealt(Card card) {
+            for (int i = 0; i < dealtCards.size(); i++) {
+                if (dealtCards[i].suit == card.suit && dealtCards[i].name == card.name)
+                    return true;
+            }
+            return false;
         }
         Deck() {
             srand(static_cast <int>(time(0)));
@@ -139,8 +163,8 @@ class Game {
         }
         void dealerHand() {
             cout << "\n\n\t" << player[1].playerName << "'s HAND\t\t\n\n";
-            cout << " Cards\t\t\tCount: " << count(1, 1);
-            cout << "\t\tBet: $" << player[1].playerBet << "\n\t\t\t┌─ ─ ─┐\n";
+            cout << " Cards\t\tCount: " << count(1, 1);
+            cout << "\tBet: $" << player[1].playerBet << "\n\t\t\t┌─ ─ ─┐\n";
             cout << " " << player[1].playersCard[1].getName(active[1][1]) << "   \t|  "; newCard(0, 1, 1);
             cout << " " << player[1].playersCard[2].getName(active[2][1]) << "   \t|  "; newCard(1, 1, 1);
             cout << " " << player[1].playersCard[3].getName(active[3][1]) << "   \t|  "; newCard(2, 1, 1);
@@ -149,13 +173,16 @@ class Game {
         }
         void playerHand() {
             cout << "\n\n\t" << player[0].playerName << "'s HAND\t\t\n\n";
-            cout << " Cards\t\t\tCount: " << count(0, 0);
-            cout << "\t\tBet: $" << player[0].playerBet << endl;
+            cout << " Cards\t\tCount: " << count(0, 0);
+            cout << "\tBet: $" << player[0].playerBet;
+            cout << " \tAdv.: " << playerAdvantage() << endl;
             cout << " " << player[0].playersCard[0].getName(active[0][0]) << "   \t"; newCard(0, 0, 0);
             cout << " " << player[0].playersCard[1].getName(active[1][0]) << "   \t"; newCard(1, 0, 0);
             cout << " " << player[0].playersCard[2].getName(active[2][0]) << "   \t"; newCard(2, 0, 0);
             cout << " " << player[0].playersCard[3].getName(active[3][0]) << "   \t"; newCard(3, 0, 0);
             cout << " " << player[0].playersCard[4].getName(active[4][0]) << "   \t"; newCard(4, 0, 0);
+            cout << setprecision(2) << " Probability: " << deck.probability(count(0, 0)) << "%\n";
+            cout << setprecision(0) << fixed;
         }
 
         void newCard(int r, int j, int p) {
@@ -251,6 +278,20 @@ class Game {
             i[0] = 1;
             i[1] = 1;   
         }
+        double playerAdvantage() {
+            double adv = 0;
+            for (int i = 0; i < 13; ++i) {
+                if (player[1].playersCard[1].value == VALUES[i]) {
+                    if (VALUES[i] == 11)
+                        adv = -16.0f;
+                    else if (VALUES[i] == 8)
+                        adv = -16.9f;
+                    else
+                        adv = ADV[i - 1];
+                }
+            }
+        return adv;
+    }
 };
 
 int main() {
