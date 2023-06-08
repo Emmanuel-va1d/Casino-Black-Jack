@@ -108,6 +108,8 @@ class Game {
                 system("clear");
                 dealerHand();
                 playerHand();
+                if (count(0, 0) == 21)
+                    stand[0] = true;
                 if (stand[0] == false) {
                     do {
                         cout << " Hit(1) or Stand(2) ";
@@ -189,7 +191,6 @@ class Game {
 
         void winCondition() {
             if (stand[0] == true && stand[1] == true || count(0, 0) > 21 || count(1, 1) > 21) {
-                playing = false;
                 system("clear");
                 if (count(0, 0) > count(0, 1) && count(0, 0) <= 21 || count(0, 1) > 21 && count(0, 1) > 21 ) {
                     player[1].playerBet -= player[0].playerBet * 0.5;
@@ -213,10 +214,43 @@ class Game {
                     cout << " " << player[j].playersCard[3].getName(active[3][j]) << "   \t"; newCard(3, 0, j);
                     cout << " " << player[j].playersCard[4].getName(active[4][j]) << "   \t"; newCard(4, 0, j);
                 }
-                cout << " " << player[0].playerName << ", Play(1) or Quit(2) ";
-                cin >> choice;
+                do {
+                    cout << " " << player[0].playerName << ", Play(1) or Quit(2) ";
+                    cin >> choice;
+                } while (choice != 1 && choice != 2);
+                if (choice == 1) {
+                    if (player[1].playerBet == 0) {
+                        system("clear");
+                        cout << " Come again";
+                        playing = false;
+                    }
+                    else if (player[0].playerBet == 0) {
+                        system("clear");
+                        cout << " Bet: $";
+                        cin >> player[0].playerBet;
+                        reset();
+                    }
+                    else
+                        reset();
+                }
+                else
+                    playing = false;
             }
-        } 
+        }
+        void reset() {
+            player[0].playersCard[0] = deck.getHand();
+            player[0].playersCard[1] = deck.getHand();
+            player[1].playersCard[0] = deck.getHand();
+            player[1].playersCard[1] = deck.getHand();
+            stand[0] = false;
+            stand[1] = true;
+            for (int i = 2; i < 6; i++) {
+                for (int j = 0; j < 2; j++)
+                    active[i][j] = false;
+            }
+            i[0] = 1;
+            i[1] = 1;   
+        }
 };
 
 int main() {
